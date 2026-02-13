@@ -99,8 +99,8 @@ export const ProblemEdit = () => {
     setErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
-  const handleSelectChange = (field: keyof ProblemFormValues) => (e: unknown) => {
-    const value = e as string;
+  const handleSelectChange = (field: keyof ProblemFormValues) => (e: any) => {
+    const value = e.target.value as string;
     setValues((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: '' }));
   };

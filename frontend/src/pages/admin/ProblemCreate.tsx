@@ -74,8 +74,8 @@ export const ProblemCreate = () => {
     setErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
-  const handleSelectChange = (field: keyof ProblemFormValues) => (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+  const handleSelectChange = (field: keyof ProblemFormValues) => (e: any) => {
+    const value = e.target.value as string;
     setValues((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: '' }));
   };
