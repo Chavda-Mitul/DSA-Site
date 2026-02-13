@@ -37,7 +37,7 @@ export const Login = () => {
     try {
       await login({ email: email.trim(), password });
       
-      navigate('/', { replace: true });
+      navigate('/topics', { replace: true });
     } catch (err: any) {
       // Extract and display error
       const message = extractErrorMessage(err, 'Login failed. Please try again.');

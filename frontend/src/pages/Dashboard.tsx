@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Typography,
   Box,
@@ -10,32 +10,44 @@ import {
   LinearProgress,
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
+import { useProgress } from '../context/ProgressContext';
 import { progressService, type ProgressSummary } from '../services/progressService';
 import { extractErrorMessage } from '../utils/errorUtils';
 
 export const Dashboard = () => {
   const { user } = useAuth();
+  const { completedIds, refreshProgress } = useProgress();
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const prevCompletedCount = useRef(completedIds.size);
+
+  const fetchSummary = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await progressService.getSummary();
+      setSummary(data);
+    } catch (err) {
+      setError(extractErrorMessage(err, 'Failed to load progress'));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSummary = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const data = await progressService.getSummary();
-        setSummary(data);
-      } catch (err) {
-        setError(extractErrorMessage(err, 'Failed to load progress'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchSummary();
   }, []);
+
+  // Refetch summary when progress changes
+  useEffect(() => {
+    // Skip initial render - only refetch when completedIds actually changes
+    if (completedIds.size !== prevCompletedCount.current) {
+      prevCompletedCount.current = completedIds.size;
+      fetchSummary();
+    }
+  }, [completedIds.size]);
 
   if (loading) {
     return (

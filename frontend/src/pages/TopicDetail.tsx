@@ -23,6 +23,7 @@ import {
   Divider,
   Checkbox,
   Snackbar,
+  Fab,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
@@ -358,20 +359,34 @@ export const TopicDetail = () => {
             fontWeight: 'bold',
             padding: '16px 24px',
             borderRadius: '12px',
-            color: 'white',
-            textShadow: '1px 1px 2px rgba(0,0,0,0.3)',
+            color: '#000000',
             '@keyframes rainbow': {
               '0%': { backgroundPosition: '0% 50%' },
               '50%': { backgroundPosition: '100% 50%' },
               '100%': { backgroundPosition: '0% 50%' },
-            },
+            }
           }
         }}
       >
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
+        <Typography variant="h6" sx={{ color: '#000000', fontWeight: 'bold' }}>
           {celebration.message}
         </Typography>
       </Snackbar>
+
+      {isAdmin && (
+        <Fab
+          color="primary"
+          aria-label="add problem"
+          onClick={() => navigate(`/admin/problems/create?topicId=${topic._id}`)}
+          sx={{
+            position: 'fixed',
+            bottom: 32,
+            right: 32,
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      )}
     </Box>
   );
 };

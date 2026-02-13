@@ -61,7 +61,7 @@ export const useProblems = (topicId: string): UseProblemsReturn => {
     if (topicId) {
       fetchProblems(1);
     }
-  }, [topicId, fetchProblems]);
+  }, [topicId, difficulty, fetchProblems]);
 
   return {
     problems,

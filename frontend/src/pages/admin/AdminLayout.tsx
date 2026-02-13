@@ -95,7 +95,7 @@ export const AdminLayout = () => {
           >
             <MenuIcon />
           </IconButton>
-          <IconButton color="inherit" onClick={() => navigate('/')} sx={{ mr: 1 }}>
+          <IconButton color="inherit" onClick={() => navigate('/topics')} sx={{ mr: 1 }}>
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">

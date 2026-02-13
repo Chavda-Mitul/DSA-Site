@@ -68,9 +68,6 @@ export const Navbar = () => {
       >
         Dashboard
       </Button>
-      <Typography variant="body1" sx={{ display: { xs: 'none', sm: 'block' }, ml: 1 }}>
-        {user?.name}
-      </Typography>
       {isMobile ? (
         <>
           <IconButton
@@ -155,7 +152,7 @@ export const Navbar = () => {
         <Typography
           variant="h6"
           component="div"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/topics')}
           sx={{
             fontWeight: 700,
             cursor: 'pointer',

@@ -16,12 +16,11 @@ import {
   Alert,
   Pagination,
   Chip,
-  Switch,
-  FormControlLabel,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Fab,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -41,7 +40,6 @@ export const ManageProblems = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [includeInactive, setIncludeInactive] = useState(false);
   const [filterTopic, setFilterTopic] = useState('');
   const [filterDifficulty, setFilterDifficulty] = useState<Difficulty | ''>('');
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; problem: Problem | null }>({
@@ -69,7 +67,6 @@ export const ManageProblems = () => {
         limit: 10,
         topicId: filterTopic || undefined,
         difficulty: filterDifficulty || undefined,
-        includeInactive,
       });
       setProblems(result.problems);
       setPagination(result.pagination);
@@ -78,7 +75,7 @@ export const ManageProblems = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, filterTopic, filterDifficulty, includeInactive]);
+  }, [currentPage, filterTopic, filterDifficulty]);
 
   useEffect(() => {
     fetchTopics();
@@ -138,16 +135,9 @@ export const ManageProblems = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Manage Problems</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => navigate('/admin/problems/create')}
-        >
-          Add Problem
-        </Button>
-      </Box>
+      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+        Manage Problems
+      </Typography>
 
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
         <FormControl size="small" sx={{ minWidth: 150 }}>
@@ -185,19 +175,6 @@ export const ManageProblems = () => {
             <MenuItem value="Hard">Hard</MenuItem>
           </Select>
         </FormControl>
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={includeInactive}
-              onChange={(e) => {
-                setIncludeInactive(e.target.checked);
-                setCurrentPage(1);
-              }}
-            />
-          }
-          label="Show inactive"
-        />
       </Box>
 
       {error && (
@@ -312,6 +289,19 @@ export const ManageProblems = () => {
         confirmText="Delete"
         loading={deleting}
       />
+
+      <Fab
+        color="primary"
+        aria-label="add problem"
+        onClick={() => navigate('/admin/problems/create')}
+        sx={{
+          position: 'fixed',
+          bottom: 32,
+          right: 32,
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </Box>
   );
 };

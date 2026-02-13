@@ -16,8 +16,7 @@ import {
   Alert,
   Pagination,
   Chip,
-  Switch,
-  FormControlLabel,
+  Fab,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -34,7 +33,6 @@ export const ManageTopics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [includeInactive, setIncludeInactive] = useState(false);
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; topic: Topic | null }>({
     open: false,
     topic: null,
@@ -46,7 +44,7 @@ export const ManageTopics = () => {
     setError(null);
 
     try {
-      const result = await adminTopicService.getTopics(currentPage, 10, includeInactive);
+      const result = await adminTopicService.getTopics(currentPage, 10, false);
       setTopics(result.topics);
       setPagination(result.pagination);
     } catch (err) {
@@ -54,7 +52,7 @@ export const ManageTopics = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, includeInactive]);
+  }, [currentPage]);
 
   useEffect(() => {
     fetchTopics();
@@ -89,30 +87,9 @@ export const ManageTopics = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Manage Topics</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => navigate('/admin/topics/create')}
-        >
-          Add Topic
-        </Button>
-      </Box>
-
-      <FormControlLabel
-        control={
-          <Switch
-            checked={includeInactive}
-            onChange={(e) => {
-              setIncludeInactive(e.target.checked);
-              setCurrentPage(1);
-            }}
-          />
-        }
-        label="Show inactive topics"
-        sx={{ mb: 2 }}
-      />
+      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+        Manage Topics
+      </Typography>
 
       {error && (
         <Alert
@@ -213,6 +190,19 @@ export const ManageTopics = () => {
         confirmText="Delete"
         loading={deleting}
       />
+
+      <Fab
+        color="primary"
+        aria-label="add topic"
+        onClick={() => navigate('/admin/topics/create')}
+        sx={{
+          position: 'fixed',
+          bottom: 32,
+          right: 32,
+        }}
+      >
+        <AddIcon />
+      </Fab>
     </Box>
   );
 };
