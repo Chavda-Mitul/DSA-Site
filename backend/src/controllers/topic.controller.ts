@@ -336,7 +336,7 @@ export const deleteTopic = asyncHandler(
 export const getTopicProblems = asyncHandler(
   async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    const { page = 1, limit = 20 } = req.query;
+    const { page = 1, limit = 20, difficulty } = req.query;
 
     // ===========================================
     // VERIFY TOPIC EXISTS
@@ -349,18 +349,29 @@ export const getTopicProblems = asyncHandler(
     }
 
     // ===========================================
+    // BUILD FILTER
+    // ===========================================
+
+    const filter: Record<string, unknown> = { topicId: id, isActive: true };
+
+    // Add difficulty filter if provided
+    if (difficulty && ['Easy', 'Medium', 'Hard'].includes(difficulty as string)) {
+      filter.difficulty = difficulty;
+    }
+
+    // ===========================================
     // GET PROBLEMS WITH PAGINATION
     // ===========================================
 
     const skip = (Number(page) - 1) * Number(limit);
 
     const [problems, totalItems] = await Promise.all([
-      Problem.find({ topicId: id, isActive: true })
+      Problem.find(filter)
         .sort({ order: 1 })
         .skip(skip)
         .limit(Number(limit)),
 
-      Problem.countDocuments({ topicId: id, isActive: true }),
+      Problem.countDocuments(filter),
     ]);
 
     const pagination = ApiResponse.createPagination(
